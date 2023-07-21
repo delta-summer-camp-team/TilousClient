@@ -74,6 +74,7 @@ class Screen(
      */
     override fun render(delta: Float) {
         // TODO
+        drawCartesianGrid(Color.GOLD)
     }
 
     /**

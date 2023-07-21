@@ -76,11 +76,12 @@ class ApplicationHttpClient(
     }
 
     fun tryLogout(): Boolean {
-        TODO()
+        // TODO()
+        return false
         // Всё делается по образу и подобию tryLogin
     }
 
-    fun tryAskPlayerId(): Boolean {
+    fun tryAskPlayerId(): PlayerID? {
         TODO()
     }
 
