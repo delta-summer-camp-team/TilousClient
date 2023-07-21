@@ -7,11 +7,11 @@ import kotlinx.coroutines.*
  * Контролирует всё, что касается обновления игры.
  */
 class GameController(
-    val gameState: GameState = GameState(),
+    private val gameState: GameState = GameState(),
     appConfig: AppConfig = AppConfig()
 ) {
-    val listener = WebSocketListener(appConfig, this::updateGameState)
-    val httpClient = ApplicationHttpClient(gameState, appConfig)
+    private val listener = WebSocketListener(appConfig, this::updateGameState)
+    private val httpClient = ApplicationHttpClient(gameState, appConfig)
 
     suspend fun start() {
         httpClient.tryLogin()
@@ -25,7 +25,7 @@ class GameController(
     /**
      * Эта функция будет вызываться пользовательским интерфейсом
      * при попытке поставить клетку.
-     * @return `true` если получилось, `false` если нет
+     * @return `true` если получилось,  `false` если нет
      */
     fun handlePlaceCellUserRequest(raw: Int, col: Int): Boolean {
         TODO()
@@ -37,7 +37,7 @@ class GameController(
     /**
      * Эта функция будет вызываться пользовательским интерфейсом
      * при попытке завершить ход или автоматически если у игрока не осталось ресурсов.
-     * @return `true` если получилось, `false` если нет
+     * @return `true` если получилось,  `false` если нет
      */
     fun handleFinishTurnRequest(): Boolean {
         TODO()
@@ -62,6 +62,9 @@ class GameController(
         // попросить завершить ход
     }
 
+    /**
+     * Закрывает все соединения и уничтожается.
+     */
     fun shutdown() {
         listener.shutdown()
         httpClient.shutdown()

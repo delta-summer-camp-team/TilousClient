@@ -27,7 +27,6 @@ class WebSocketListener(
     suspend fun start() {
         val serverUri = URI.create("${appConfig.serverAddress}:${AppConfig.webSocketPort}/game")
 
-        //
         client.ws(
             method = HttpMethod.Get,
             host = serverUri.host,
@@ -39,23 +38,15 @@ class WebSocketListener(
                 println("Connected to WebSocket server")
 
                 // Read messages from the server
-                for (message in incoming) {
-                    if (message is Frame.Text) {
-                        val text = message.readText()
+                for (message in incoming) if (message is Frame.Text) {
+                    val text = message.readText()
 
-                        try {
-
-                            val gameState = Gson().fromJson(text, Tilous::class.java)
-                            updateFunction(gameState)
-                        } catch (_: Exception) {
-
-                        }
-                    }
+                    try {
+                        val gameState = Gson().fromJson(text, Tilous::class.java) // Пытается привести json к Tilous.
+                        updateFunction(gameState) // Обновляет состояние игры
+                    } catch (_: Exception) { }
                 }
-
-            } finally {
-
-            }
+            } finally { }
         }
 
         client.close()
