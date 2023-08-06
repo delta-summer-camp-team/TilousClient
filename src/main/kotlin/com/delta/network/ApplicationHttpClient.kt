@@ -1,6 +1,7 @@
 package com.delta.network
 
 import com.delta.AppConfig
+import com.delta.GamePhase
 import com.delta.GameState
 import com.delta.PlayerID
 import com.google.gson.Gson
@@ -11,8 +12,10 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
+import io.ktor.client.utils.EmptyContent.contentType
 import io.ktor.http.*
 import io.ktor.serialization.gson.*
+import io.ktor.util.*
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -22,13 +25,13 @@ import kotlinx.coroutines.runBlocking
  *
  */
 class ApplicationHttpClient(
-    val gameState: GameState, val appConfig: AppConfig = AppConfig()
+    private val gameState: GameState, private val appConfig: AppConfig = AppConfig()
 ) {
-    val fullServerAddress = "${appConfig.serverAddress}:${AppConfig.httpPort}"
+    private val fullServerAddress = "${appConfig.serverAddress}:${AppConfig.httpPort}"
 
-    var player: Player? = null
+    private var player: Player? = null
 
-    val client = HttpClient(OkHttp) {
+    private val client = HttpClient(OkHttp) {
         install(ContentNegotiation) { gson() }
         install(Logging) {
             logger = Logger.DEFAULT
@@ -103,9 +106,17 @@ class ApplicationHttpClient(
         }
     }
 
+    fun askToPlaceCell(row: Int, col: Int): Boolean {
+        return runBlocking {
+            val response: HttpResponse = client.post("$fullServerAddress/placeCell") {
+                parameter(key = "PlayerID", value = player!!.id)
+                parameter(key = "pwd", value = player!!.pwd)
+                parameter(key = "row", value = row.toString())
+                parameter(key = "col", value = col.toString())
+            }
 
-    fun askToPlaceCell(raw: Int, col: Int): Boolean {
-        TODO()
+            return@runBlocking response.status == HttpStatusCode.OK
+        }
     }
 
     fun askToEndTurn(): Boolean {
