@@ -40,7 +40,7 @@ class GameController(
      * @return `true` если получилось,  `false` если нет
      */
     fun handleFinishTurnRequest(): Boolean {
-        TODO()
+        return httpClient.askToEndTurn()
     }
 
     /**
