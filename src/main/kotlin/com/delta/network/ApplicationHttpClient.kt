@@ -81,9 +81,28 @@ class ApplicationHttpClient(
         // Всё делается по образу и подобию tryLogin
     }
 
-    fun tryAskPlayerId(): PlayerID? {
-        TODO()
+
+    suspend fun tryAskPlayerId(): PlayerID? {
+        return try {
+            val response: HttpResponse = client.get{
+                url("$fullServerAddress/playerId")
+                parameter("id", player?.id)
+                parameter("pwd", player?.pwd)
+            }
+
+            if (response.status == HttpStatusCode.OK) {
+                val playerId: PlayerID? = Gson().fromJson(response.body<String>(), PlayerID::class.java)
+                return playerId
+            } else {
+                println("Server returned an error: ${response.status}")
+                return null
+            }
+        } catch (e: Exception) {
+            println("Error occurred while trying to ask for PlayerID: ${e.message}")
+            return null
+        }
     }
+
 
     fun askToPlaceCell(raw: Int, col: Int): Boolean {
         TODO()
