@@ -84,8 +84,26 @@ class ApplicationHttpClient(
         // Всё делается по образу и подобию tryLogin
     }
 
-    fun tryAskPlayerId(): PlayerID? {
-        TODO()
+
+    suspend fun tryAskPlayerId(): PlayerID? {
+        try {
+            val response: HttpResponse = client.get{
+                url("$fullServerAddress/playerId")
+                parameter("id", player?.id)
+                parameter("pwd", player?.pwd)
+            }
+
+            return if (response.status == HttpStatusCode.OK) {
+                val playerId: PlayerID? = Gson().fromJson(response.body<String>(), PlayerID::class.java)
+                playerId
+            } else {
+                println("Server returned an error: ${response.status}")
+                null
+            }
+        } catch (e: Exception) {
+            println("Error occurred while trying to ask for PlayerID: ${e.message}")
+            return null
+        }
     }
 
     fun askToPlaceCell(row: Int, col: Int): Boolean {
@@ -102,7 +120,20 @@ class ApplicationHttpClient(
     }
 
     fun askToEndTurn(): Boolean {
-        TODO()
+        return runBlocking {
+            val response: HttpResponse = client.post {
+                url("$fullServerAddress/endPlayersTurn")
+                parameter("id", player?.id)
+                parameter("pwd", player?.pwd)
+            }
+
+            if (response.status.isSuccess()) {
+                return@runBlocking true
+            } else {
+                println(response.body<String>())
+                return@runBlocking false
+            }
+        }
     }
 
     fun shutdown() {

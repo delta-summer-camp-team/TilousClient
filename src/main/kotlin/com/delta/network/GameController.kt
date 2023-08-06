@@ -27,11 +27,14 @@ class GameController(
      * при попытке поставить клетку.
      * @return `true` если получилось,  `false` если нет
      */
-    fun handlePlaceCellUserRequest(raw: Int, col: Int): Boolean {
-        TODO()
-        // Эта функция -- очень простая!
-        // Нужно проверить наш ли сейчас ход, а затем просто обратиться к
-        // соответствующей функции в httpClient и вернуть результат!
+    fun handlePlaceCellUserRequest(row: Int, col: Int): Boolean {
+        if (gameState.phase == GamePhase.PLAYING_MYTURN) {
+            // Check if the cell is placeable
+            return httpClient.askToPlaceCell(row, col)
+        } else {
+            println("It's not your turn.")
+            return false
+        }
     }
 
     /**
