@@ -109,7 +109,20 @@ class ApplicationHttpClient(
     }
 
     fun askToEndTurn(): Boolean {
-        TODO()
+        return runBlocking {
+            val response: HttpResponse = client.post {
+                url("$fullServerAddress/endPlayersTurn")
+                parameter("id", player?.id)
+                parameter("pwd", player?.pwd)
+            }
+
+            if (response.status.isSuccess()) {
+                return@runBlocking true
+            } else {
+                println(response.body<String>())
+                return@runBlocking false
+            }
+        }
     }
 
     fun shutdown() {
