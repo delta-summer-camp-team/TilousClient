@@ -93,7 +93,7 @@ class Screen(
     /**
      * По данным координатам узнаёт какого цвета должна быть клетка.
      */
-    private fun getCellColor(raw: Int, col: Int): Color {
+    private fun getCellColor(row: Int, col: Int): Color {
         // TODO
         return Color.BLACK.cpy()
     }
