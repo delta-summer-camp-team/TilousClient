@@ -14,6 +14,7 @@ import ktx.app.KtxScreen
 
 
 import com.delta.*
+import com.delta.graphics.config.ColorSettings
 import com.delta.graphics.geometry.Camera
 import com.delta.graphics.geometry.Cell
 
@@ -64,7 +65,27 @@ class Screen(
      * а так же устанавливает текст. Если игра только началась, генерирует массив клеток [cells].
      */
     private fun updateInfo() {
-        //TODO
+        val game = gameState.game
+        val currentPlayerId = gameState.playerID
+        val currentPlayerResources = game?.getPlayerResources()?.getOrDefault(currentPlayerId, 0)
+
+        shouldBeMyBackgroundColor = gameState.phase == GamePhase.PLAYER_TURN
+        myColor = ColorSettings.colorMap[gameState.playerID] ?: Color.WHITE
+
+        text = when (gameState.phase) {
+            GamePhase.NOT_STARTED -> "Welcome!"
+            GamePhase.PLAYER_TURN -> "Your turn. Resources: $currentPlayerResources"
+            GamePhase.OPPONENT_TURN -> "Opponent's turn."
+            GamePhase.FINISHED -> "Game over!"
+            else -> ""
+        }
+
+        cells?.forEach { cell ->
+            val playerID = game?.getCell(cell.row, cell.col)
+            cell.color = ColorSettings.colorMap[playerID]!!
+        }
+
+        currentBackgroundColor.set(if (shouldBeMyBackgroundColor) myColor else Color.BLACK)
     }
 
     /**
@@ -90,6 +111,7 @@ class Screen(
     /**
      * По данным координатам узнаёт какого цвета должна быть клетка.
      */
+
     private fun getCellColor(row: Int, col: Int): Color {
         if (cells != null) {
             for (cell in cells!!) {

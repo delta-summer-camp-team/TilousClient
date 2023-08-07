@@ -13,7 +13,7 @@ import com.delta.graphics.config.ColorSettings
  * @property cellSize размер клетки.
  */
 class Cell(val row: Int, val col: Int) {
-    val color = ColorSettings.EmptyCellColor
+    var color = ColorSettings.EmptyCellColor
     val cellSize: Float = 1.0f
     val polygon = createCellPolygon()
 
