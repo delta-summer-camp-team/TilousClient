@@ -13,7 +13,7 @@ object ColorSettings {
     val EmptyCellColor = Color(0.2f, 0.2f, 0.2f, 1.0f)
     val BackgroundColor = Color(0.1f, 0.1f, 0.1f, 1.0f)
 
-    val colorMap : Map<PlayerID, Color> = mapOf() //TODO
+    val colorMap : Map<PlayerID?, Color> = mapOf(PlayerID.PLAYER_1 to Player1Color, PlayerID.PLAYER_2 to Player2Color,PlayerID.PLAYER_3 to Player3Color,PlayerID.PLAYER_4 to Player4Color, null to EmptyCellColor) //TODO
 }
 
 

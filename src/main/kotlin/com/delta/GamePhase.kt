@@ -6,5 +6,8 @@ package com.delta
 enum class GamePhase {
     NOT_STARTED, // TODO добавьте сюда названия тех фаз, которые вам нужны
     PLAYING_MYTURN,
-    PLAYING_IDLE
+    PLAYING_IDLE,
+    PLAYER_TURN,
+    OPPONENT_TURN,
+    GAME_OVER
 }
