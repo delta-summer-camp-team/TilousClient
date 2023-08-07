@@ -86,7 +86,11 @@ class Screen(
     override fun resize(width: Int, height: Int) {
         // TODO
     }
-    private fun getCellColor(raw: Int, col: Int): Color {
+
+    /**
+     * По данным координатам узнаёт какого цвета должна быть клетка.
+     */
+    private fun getCellColor(row: Int, col: Int): Color {
         // TODO
         return Color.BLACK.cpy()
     }

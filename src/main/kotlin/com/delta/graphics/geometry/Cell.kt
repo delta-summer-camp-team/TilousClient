@@ -6,13 +6,13 @@ import com.delta.graphics.config.ColorSettings
 
 /**
  * Представляет собой реализацию "клетки" на доске.
- * @property raw номер строки, в которой клетка находится.
+ * @property row номер строки, в которой клетка находится.
  * @property col номер столбца, в которой клетка находится.
  * @property color текущий цвет клетки.
  * @property polygon полигон (точнее, квадрат), который представляет эту клетку.
  * @property cellSize размер клетки.
  */
-class Cell(val raw: Int, val col: Int) {
+class Cell(val row: Int, val col: Int) {
     val color = ColorSettings.EmptyCellColor
     val cellSize: Float = 1.0f
     val polygon = createCellPolygon()
