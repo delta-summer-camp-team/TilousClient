@@ -91,7 +91,14 @@ class Screen(
      * По данным координатам узнаёт какого цвета должна быть клетка.
      */
     private fun getCellColor(row: Int, col: Int): Color {
-        // TODO
+        if (cells != null) {
+            for (cell in cells!!) {
+                if (cell.row == row && cell.col == col) {
+                    return cell.color // Assuming each cell has a 'color' property of type Color
+                }
+            }
+        }
+
         return Color.BLACK.cpy()
     }
     private fun drawPolygon(polygon: Polygon, color: Color) {
