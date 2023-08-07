@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Polygon
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import ktx.app.KtxScreen
@@ -82,10 +83,6 @@ class Screen(
      */
     override fun show() { camera.setToOrtho(viewport) }
 
-    /**
-     * Вызывается, когда пользователь меняет размер окна. Тут должны меняться [uiViewport] и [viewport],
-     * чтобы правильно сохранять пропорции. [width], [height] -- новая ширина и высота окна в пикселях.
-     */
     override fun resize(width: Int, height: Int) {
         // TODO
     }
@@ -101,19 +98,48 @@ class Screen(
                 }
             }
         }
+
         return Color.BLACK.cpy()
     }
-
-    /**
-     * Рисует данный полигон используя [shapeRenderer].
-     */
     private fun drawPolygon(polygon: Polygon, color: Color) {
-        // TODO
+        shapeRenderer.projectionMatrix = camera.projMatrix()
+
+        // Set the shapeRenderer in filled mode to draw a filled-in polygon
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+        shapeRenderer.color = color
+
+        // Get the vertices of the polygon
+        val vertices = polygon.transformedVertices
+        val center = calculateCenter(vertices)
+
+        // Draw triangles connecting the center to each vertex
+        for (i in 0 until vertices.size / 2) {
+            val x1 = vertices[i * 2]
+            val y1 = vertices[i * 2 + 1]
+            val x2 = vertices[(i + 1) % (vertices.size / 2) * 2]
+            val y2 = vertices[(i + 1) % (vertices.size / 2) * 2 + 1]
+
+            // Draw the triangle (center, x1, x2)
+            shapeRenderer.triangle(center.x, center.y, x1, y1, x2, y2)
+        }
+
+        shapeRenderer.end()
     }
 
-    /**
-     * Эта функция нужна для того, чтобы показать, как работает отрисовка. Рисует квадратную сетку.
-     */
+    private fun calculateCenter(vertices: FloatArray): Vector2 {
+        var centerX = 0f
+        var centerY = 0f
+        val vertexCount = vertices.size / 2
+
+        for (i in 0 until vertexCount) {
+            centerX += vertices[i * 2]
+            centerY += vertices[i * 2 + 1]
+        }
+
+        return Vector2(centerX / vertexCount, centerY / vertexCount)
+    }
+
+
     private fun drawCartesianGrid(color: Color, numLines: Int = 10) {
         shapeRenderer.projectionMatrix = camera.projMatrix()
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
