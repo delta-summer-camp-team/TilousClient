@@ -95,7 +95,13 @@ class Screen(
      * рисовать всё.
      */
     override fun render(delta: Float) {
-        // TODO
+        updateInfo()
+        if (cells != null) {
+            cells?.forEach { theCell ->
+                drawPolygon(theCell.polygon, theCell.color)
+            }
+        }
+        drawTextTopLeft(text)
         drawCartesianGrid(Color.GOLD)
     }
 
