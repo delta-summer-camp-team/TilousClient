@@ -73,7 +73,13 @@ class Screen(
         myColor = ColorSettings.colorMap[gameState.playerID] ?: Color.WHITE
 
         text = when (gameState.phase) {
-            GamePhase.NOT_STARTED -> "Welcome!"
+            GamePhase.NOT_STARTED -> {
+                if (cells == null) {
+                    val boardSize = game?.getBoardSize() ?: 0
+                    cells = MutableList(boardSize * boardSize) { Cell(it / boardSize, it % boardSize) }
+                }
+                "Welcome!"
+            }
             GamePhase.PLAYER_TURN -> "Your turn. Resources: $currentPlayerResources"
             GamePhase.OPPONENT_TURN -> "Opponent's turn."
             GamePhase.FINISHED -> "Game over!"
@@ -82,7 +88,7 @@ class Screen(
 
         cells?.forEach { cell ->
             val playerID = game?.getCell(cell.row, cell.col)
-            cell.color = ColorSettings.colorMap[playerID]!!
+            cell.color = ColorSettings.colorMap[playerID] ?: Color.BLACK // Set the color based on player or default
         }
 
         currentBackgroundColor.set(if (shouldBeMyBackgroundColor) myColor else Color.BLACK)
