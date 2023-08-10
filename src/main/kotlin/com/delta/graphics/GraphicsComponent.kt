@@ -3,6 +3,7 @@ package com.delta.graphics
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.delta.*
+import com.delta.graphics.controllers.CameraController
 import com.delta.network.GameController
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -26,9 +27,11 @@ class GraphicsComponent(
         * Для того чтобы действия игрока обрабатывались, нужно создать контроллер, который будет
         * принимать сигналы от приложения (такие как нажатие мыши).
         * */
+        val cameraController = CameraController(screen.camera)
 
 
         val inputMultiplexer = InputMultiplexer()
+        inputMultiplexer.addProcessor(cameraController)
 
         /* *
          * TODO
