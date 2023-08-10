@@ -74,10 +74,6 @@ class Screen(
 
         text = when (gameState.phase) {
             GamePhase.NOT_STARTED -> {
-                if (cells == null) {
-                    val boardSize = game?.getBoardSize() ?: 0
-                    cells = MutableList(boardSize * boardSize) { Cell(it / boardSize, it % boardSize) }
-                }
                 "Welcome!"
             }
             GamePhase.PLAYER_TURN -> "Your turn. Resources: $currentPlayerResources"
@@ -86,13 +82,19 @@ class Screen(
             else -> ""
         }
 
-        cells?.forEach { cell ->
-            val playerID = game?.getCell(cell.row, cell.col)
-            cell.color = ColorSettings.colorMap[playerID] ?: Color.BLACK // Set the color based on player or default
+        if (cells == null && gameState.phase != GamePhase.NOT_STARTED) {
+            val boardSize = game?.getBoardSize() ?: 0
+            cells = MutableList(boardSize * boardSize) { Cell(it / boardSize, it % boardSize) }
+
+            cells?.forEach { cell ->
+                val playerID = game?.getCell(cell.row, cell.col)
+                cell.color = ColorSettings.colorMap[playerID] ?: Color.BLACK // Set the color based on player or default
+            }
         }
 
         currentBackgroundColor.set(if (shouldBeMyBackgroundColor) myColor else Color.BLACK)
     }
+
 
     /**
      * Основная функция отрисовки. Вызывается автоматически приложением.

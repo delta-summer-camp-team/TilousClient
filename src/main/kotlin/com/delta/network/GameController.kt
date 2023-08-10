@@ -28,7 +28,7 @@ class GameController(
      * @return `true` если получилось,  `false` если нет
      */
     fun handlePlaceCellUserRequest(row: Int, col: Int): Boolean {
-        if (gameState.phase == GamePhase.PLAYING_MYTURN) {
+        if (gameState.phase == GamePhase.PLAYER_TURN) {
             // Check if the cell is placeable
             return httpClient.askToPlaceCell(row, col)
         } else {
