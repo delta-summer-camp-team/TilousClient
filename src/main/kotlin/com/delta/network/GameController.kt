@@ -61,23 +61,26 @@ class GameController(
         }
 
         // 3. If it's time for the player's turn
-        if (this.gameState.isMyTurn(this.gameState.playerID!!)) {
-            this.gameState.phase = GamePhase.PLAYER_TURN
-        } else if (this.gameState.isOtherTurn(this.gameState.playerID!!)) {
-            this.gameState.phase = GamePhase.OPPONENT_TURN
+        this.gameState.playerID?.let { playerID ->
+            if (this.gameState.isMyTurn(playerID)) {
+                this.gameState.phase = GamePhase.PLAYER_TURN
+            }
         }
 
-        // 4. If the game has ended
+         // 4. If the game has ended
         if (gameState.gameIsOver) {
             this.gameState.phase = GamePhase.FINISHED
         }
 
         // 5. If it's the player's turn and they have no resources left
-        val playerResources = gameState.getPlayerResources()[this.gameState.playerID!!]
-        if (this.gameState.phase == GamePhase.PLAYER_TURN && playerResources != null && playerResources == 0) {
-            // Automatically request to end the turn
-            handleFinishTurnRequest()
+        this.gameState.playerID?.let { playerID ->
+            val playerResources = gameState.getPlayerResources()[playerID]
+            if (this.gameState.phase == GamePhase.PLAYER_TURN && playerResources == 0) {
+                // Automatically request to end the turn
+                handleFinishTurnRequest()
+            }
         }
+
     }
 
 
