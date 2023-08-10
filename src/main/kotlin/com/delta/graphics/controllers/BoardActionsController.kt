@@ -36,7 +36,9 @@ class BoardActionsController(
             // Handle finishing the turn when Enter key is pressed
             return finishTurnHandler()
         }
+        println (keycode)
 
         return false
     }
 }
+
