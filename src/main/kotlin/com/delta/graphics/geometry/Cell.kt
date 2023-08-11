@@ -30,8 +30,7 @@ class Cell(val row: Int, val col: Int) {
             (1 + row) * cellSize - margin, (1 + col) * cellSize - margin,
             (0 + row) * cellSize + margin, (1 + col) * cellSize - margin
         )
-        val polygon = Polygon(arrayOfPoints)
-        return polygon
+        return Polygon(arrayOfPoints)
     }
 
 }

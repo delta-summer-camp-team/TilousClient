@@ -50,10 +50,14 @@ class GameController(
      * Основная функция, которая обновляет состояние игры.
      * Вызывается внутри [listener], когда ему приходит сигнал от сервера.
      */
-    private fun updateGameState(gameState: Tilous) {
+    private fun updateGameState(game: Tilous) {
+        if (gameState.playerID == null) {
+            gameState.playerID = httpClient.tryAskPlayerId()
+        }
+
 
         // 1. Update the game state
-        this.gameState.game = gameState
+        this.gameState.game = game
         // Possible logic error. If the game state is
         // 2. If the game has not started AND the attempt to find out the ID is successful
         if (this.gameState.phase == GamePhase.NOT_STARTED && this.gameState.playerID != null) {
@@ -68,19 +72,21 @@ class GameController(
         }
 
          // 4. If the game has ended
-        if (gameState.gameIsOver) {
+        if (game.gameIsOver) {
             this.gameState.phase = GamePhase.FINISHED
         }
 
         // 5. If it's the player's turn and they have no resources left
         this.gameState.playerID?.let { playerID ->
-            val playerResources = gameState.getPlayerResources()[playerID]
+            val playerResources = game.getPlayerResources()[playerID]
             if (this.gameState.phase == GamePhase.PLAYER_TURN && playerResources == 0) {
                 // Automatically request to end the turn
                 handleFinishTurnRequest()
             }
         }
-
+        println("Current game state:")
+        println(this.gameState.playerID)
+        println(this.gameState.phase)
     }
 
 

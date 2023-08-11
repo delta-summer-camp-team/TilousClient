@@ -21,12 +21,12 @@ class BoardActionsController(
                 // Handle placing a cell at the clicked cell's position
                 val row = cell.row
                 val col = cell.col
+                println("$row, $col")
                 placeCellHandler(row, col)
-                return true
             }
         }
 
-        return false // No cell was clicked
+        return true // No cell was clicked
     }
 
     override fun keyDown(keycode: Int): Boolean {
