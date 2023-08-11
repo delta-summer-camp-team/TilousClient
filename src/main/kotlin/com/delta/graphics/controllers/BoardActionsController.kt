@@ -2,8 +2,6 @@ package com.delta.graphics.controllers
 
 import com.badlogic.gdx.InputAdapter
 import com.badlogic.gdx.math.Vector2
-import com.delta.graphics.Screen
-import com.delta.graphics.geometry.Camera
 import com.delta.graphics.geometry.Cell
 
 class BoardActionsController(
