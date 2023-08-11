@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
+import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import ktx.app.KtxScreen
@@ -120,13 +121,25 @@ class Screen(
     override fun show() { camera.setToOrtho(viewport) }
 
     override fun resize(width: Int, height: Int) {
+        val oldCameraPosition = camera.getPosition().cpy()
         uiViewport.update(width, height, true)
+
         val aspectRatio = uiViewport.worldWidth / uiViewport.worldHeight
         val newWorldHeight = 10f
         val newWorldWidth = aspectRatio * newWorldHeight
+
+        // Remember the old position of the camera
         viewport.setWorldSize(newWorldWidth, newWorldHeight)
+
+        // Reset the camera position
         camera.setToOrtho(viewport)
+
+        // Set the camera back to the old position
+        camera.updatePosition(oldCameraPosition)
     }
+
+
+
 
 
     /**
