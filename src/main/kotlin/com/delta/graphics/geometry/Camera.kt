@@ -14,7 +14,7 @@ class Camera() {
     private val camera = OrthographicCamera()
 
     /**
-     * Устанавливает камеру в данную позицию
+     * Устанавливает камеру в данную позициюa
      */
     fun updatePosition(position: Vector3) {
         camera.position.set(position)
