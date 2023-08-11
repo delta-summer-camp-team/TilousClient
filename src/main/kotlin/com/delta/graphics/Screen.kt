@@ -120,8 +120,14 @@ class Screen(
     override fun show() { camera.setToOrtho(viewport) }
 
     override fun resize(width: Int, height: Int) {
-        // TODO
+        uiViewport.update(width, height, true)
+        val aspectRatio = uiViewport.worldWidth / uiViewport.worldHeight
+        val newWorldHeight = 10f
+        val newWorldWidth = aspectRatio * newWorldHeight
+        viewport.setWorldSize(newWorldWidth, newWorldHeight)
+        camera.setToOrtho(viewport)
     }
+
 
     /**
      * По данным координатам узнаёт какого цвета должна быть клетка.
