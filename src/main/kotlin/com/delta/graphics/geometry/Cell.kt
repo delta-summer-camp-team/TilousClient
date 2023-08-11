@@ -23,14 +23,14 @@ class Cell(val row: Int, val col: Int) {
      * Он должен зависеть от координат клетки и её размера
      */
     private fun createCellPolygon(): Polygon {
+        val margin = cellSize * 0.1f // Adjust the margin to control the size of the cells
         val arrayOfPoints = floatArrayOf(
-            (0 + row) * cellSize, (0 + col) * cellSize,
-            (1 + row) * cellSize, (0 + col) * cellSize,
-            (1 + row) * cellSize, (1 + col) * cellSize,
-            (0 + row) * cellSize, (1 + col) * cellSize)
-        val polygon = Polygon(arrayOfPoints)
-        return polygon
-
-
+            (0 + row) * cellSize + margin, (0 + col) * cellSize + margin,
+            (1 + row) * cellSize - margin, (0 + col) * cellSize + margin,
+            (1 + row) * cellSize - margin, (1 + col) * cellSize - margin,
+            (0 + row) * cellSize + margin, (1 + col) * cellSize - margin
+        )
+        return Polygon(arrayOfPoints)
     }
+
 }

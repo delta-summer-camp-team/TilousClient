@@ -120,8 +120,6 @@ class Screen(
     override fun show() { camera.setToOrtho(viewport) }
 
     override fun resize(width: Int, height: Int) {
-        uiViewport.update(width, height, true)
-        viewport.update(width, height, true)
 
     }
 
@@ -206,7 +204,7 @@ class Screen(
         val font = BitmapFont()
 
         batch.projectionMatrix = uiViewport.camera.combined
-        font.data.setScale(2.0f)
+
         batch.begin()
 
         font.color = Color.YELLOW
