@@ -25,7 +25,7 @@ class GraphicsComponent(
 
         val cameraController = CameraController(screen.camera)
         val boardActionsController = BoardActionsController(
-            screen.cells,
+            screen::cells,
             screen.camera::screenToWorld2D,
             gameController::handlePlaceCellUserRequest,
             gameController::handleFinishTurnRequest
