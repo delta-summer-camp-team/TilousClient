@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Polygon
+import com.badlogic.gdx.math.Vector2
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import ktx.app.KtxScreen
 
 
 import com.delta.*
+import com.delta.graphics.config.ColorSettings
 import com.delta.graphics.geometry.Camera
 import com.delta.graphics.geometry.Cell
 
@@ -63,8 +65,36 @@ class Screen(
      * а так же устанавливает текст. Если игра только началась, генерирует массив клеток [cells].
      */
     private fun updateInfo() {
-        //TODO
+        val game = gameState.game
+        val currentPlayerId = gameState.playerID
+        val currentPlayerResources = game?.getPlayerResources()?.getOrDefault(currentPlayerId, 0)
+
+        shouldBeMyBackgroundColor = gameState.phase == GamePhase.PLAYER_TURN
+        myColor = ColorSettings.colorMap[gameState.playerID] ?: Color.WHITE
+
+        text = when (gameState.phase) {
+            GamePhase.NOT_STARTED -> {
+                "Welcome!"
+            }
+            GamePhase.PLAYER_TURN -> "Your turn. Resources: $currentPlayerResources"
+            GamePhase.OPPONENT_TURN -> "Opponent's turn."
+            GamePhase.FINISHED -> "Game over!"
+            else -> ""
+        }
+
+        if (cells == null && gameState.phase != GamePhase.NOT_STARTED) {
+            val boardSize = game?.getBoardSize() ?: 0
+            cells = MutableList(boardSize * boardSize) { Cell(it / boardSize, it % boardSize) }
+
+            cells?.forEach { cell ->
+                val playerID = game?.getCell(cell.row, cell.col)
+                cell.color = ColorSettings.colorMap[playerID] ?: Color.BLACK // Set the color based on player or default
+            }
+        }
+
+        currentBackgroundColor.set(if (shouldBeMyBackgroundColor) myColor else Color.BLACK)
     }
+
 
     /**
      * Основная функция отрисовки. Вызывается автоматически приложением.
@@ -73,9 +103,14 @@ class Screen(
      * рисовать всё.
      */
     override fun render(delta: Float) {
-        // TODO
-        drawCartesianGrid(Color.GOLD)
+        updateInfo()
+        if (cells != null) {
+            cells?.forEach { theCell ->
+                drawPolygon(theCell.polygon, theCell.color)
+            }
+        }
         drawTextTopLeft(text)
+        drawCartesianGrid(Color.GOLD)
     }
 
     /**
@@ -83,32 +118,66 @@ class Screen(
      */
     override fun show() { camera.setToOrtho(viewport) }
 
-    /**
-     * Вызывается, когда пользователь меняет размер окна. Тут должны меняться [uiViewport] и [viewport],
-     * чтобы правильно сохранять пропорции. [width], [height] -- новая ширина и высота окна в пикселях.
-     */
     override fun resize(width: Int, height: Int) {
-        // TODO
+        uiViewport.update(width, height, true)
+        viewport.update(width, height, true)
+
     }
 
     /**
      * По данным координатам узнаёт какого цвета должна быть клетка.
      */
-    private fun getCellColor(raw: Int, col: Int): Color {
-        // TODO
+
+    private fun getCellColor(row: Int, col: Int): Color {
+        if (cells != null) {
+            for (cell in cells!!) {
+                if (cell.row == row && cell.col == col) {
+                    return cell.color // Assuming each cell has a 'color' property of type Color
+                }
+            }
+        }
+
         return Color.BLACK.cpy()
     }
-
-    /**
-     * Рисует данный полигон используя [shapeRenderer].
-     */
     private fun drawPolygon(polygon: Polygon, color: Color) {
-        // TODO
+        shapeRenderer.projectionMatrix = camera.projMatrix()
+
+        // Set the shapeRenderer in filled mode to draw a filled-in polygon
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+        shapeRenderer.color = color
+
+        // Get the vertices of the polygon
+        val vertices = polygon.transformedVertices
+        val center = calculateCenter(vertices)
+
+        // Draw triangles connecting the center to each vertex
+        for (i in 0 until vertices.size / 2) {
+            val x1 = vertices[i * 2]
+            val y1 = vertices[i * 2 + 1]
+            val x2 = vertices[(i + 1) % (vertices.size / 2) * 2]
+            val y2 = vertices[(i + 1) % (vertices.size / 2) * 2 + 1]
+
+            // Draw the triangle (center, x1, x2)
+            shapeRenderer.triangle(center.x, center.y, x1, y1, x2, y2)
+        }
+
+        shapeRenderer.end()
     }
 
-    /**
-     * Эта функция нужна для того, чтобы показать, как работает отрисовка. Рисует квадратную сетку.
-     */
+    private fun calculateCenter(vertices: FloatArray): Vector2 {
+        var centerX = 0f
+        var centerY = 0f
+        val vertexCount = vertices.size / 2
+
+        for (i in 0 until vertexCount) {
+            centerX += vertices[i * 2]
+            centerY += vertices[i * 2 + 1]
+        }
+
+        return Vector2(centerX / vertexCount, centerY / vertexCount)
+    }
+
+
     private fun drawCartesianGrid(color: Color, numLines: Int = 10) {
         shapeRenderer.projectionMatrix = camera.projMatrix()
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line)
@@ -136,7 +205,7 @@ class Screen(
         val font = BitmapFont()
 
         batch.projectionMatrix = uiViewport.camera.combined
-
+        font.data.setScale(2.0f)
         batch.begin()
 
         font.color = Color.YELLOW

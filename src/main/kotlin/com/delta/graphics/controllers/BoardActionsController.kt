@@ -19,7 +19,7 @@ import com.delta.graphics.geometry.Cell
 class BoardActionsController(
     private val cells: List<Cell>?,
     private val screenToWorld: (Int, Int) -> Vector2,
-    private val placeCellHandler: (raw: Int, col: Int) -> Boolean,
+    private val placeCellHandler: (row: Int, col: Int) -> Boolean,
     private val finishTurnHandler: () -> Boolean,
 
     ) : InputAdapter() {

@@ -1,8 +1,8 @@
 package com.delta
 
-/**
- * Обозначает фазы игры с точки зрения игрока
- */
 enum class GamePhase {
-    NOT_STARTED, // TODO добавьте сюда названия тех фаз, которые вам нужны
+    NOT_STARTED,
+    PLAYER_TURN,
+    OPPONENT_TURN,
+    FINISHED
 }
