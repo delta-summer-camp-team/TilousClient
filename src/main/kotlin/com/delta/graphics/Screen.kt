@@ -120,7 +120,8 @@ class Screen(
     override fun show() { camera.setToOrtho(viewport) }
 
     override fun resize(width: Int, height: Int) {
-
+        viewport.update(width, height, true)
+        uiViewport.update(width, height, true)
     }
 
     /**

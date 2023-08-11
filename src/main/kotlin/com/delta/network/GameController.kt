@@ -81,7 +81,9 @@ class GameController(
             val playerResources = game.getPlayerResources()[playerID]
             if (this.gameState.phase == GamePhase.PLAYER_TURN && playerResources == 0) {
                 // Automatically request to end the turn
-                handleFinishTurnRequest()
+                val turnEnded = handleFinishTurnRequest()
+                if (turnEnded) {
+                    this.gameState.phase = GamePhase.OPPONENT_TURN
             }
         }
         println("Current game state:")
@@ -96,6 +98,12 @@ class GameController(
     fun shutdown() {
         listener.shutdown()
         httpClient.shutdown()
+
+    }
+}
+
+    fun shutdown() {
+
     }
 }
 
