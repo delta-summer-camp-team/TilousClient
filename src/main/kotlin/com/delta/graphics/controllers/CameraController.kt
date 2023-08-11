@@ -9,16 +9,24 @@ class CameraController(
 ) : InputAdapter() {
 
     private val lastPosition = camera.getPosition()
+    private var positionOnTouch = Pair(0, 0)
 
     override fun touchDown(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        positionOnTouch = screenX to screenY
         lastPosition.set(camera.screenToWorld(screenX, screenY))
         return true
     }
 
     override fun touchDragged(screenX: Int, screenY: Int, pointer: Int): Boolean {
         val newPosition = camera.screenToWorld(screenX, screenY)
+        camera.translate(lastPosition)
         val differenceVectors = lastPosition.sub(newPosition)
-        camera.updatePosition(differenceVectors)
+        //camera.updatePosition(differenceVectors)
+        camera.translate(differenceVectors)
         return true
+    }
+
+    override fun touchUp(screenX: Int, screenY: Int, pointer: Int, button: Int): Boolean {
+        return positionOnTouch!= screenX to screenY
     }
 }
