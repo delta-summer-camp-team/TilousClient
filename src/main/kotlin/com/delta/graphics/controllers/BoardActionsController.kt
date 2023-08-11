@@ -60,11 +60,11 @@ class BoardActionsController(
         ), Color(1.00f, 0.50f, 0.00f, 1f)]
         val usedColors = ColorSettings.ColorMap.values
         val playerID = gameState.playerID
-        if playerID != null{
+        if (playerID != null) {
             var i = 0
             var currentColor = colors[0]
             while (currentColor in usedColors) {
-                currentColor = colors[(i + 1) mod colors.size]
+                currentColor = colors[(i + 1) % colors.size]
                 i += 1
             }
             updateColor(playerID, currentColor)
