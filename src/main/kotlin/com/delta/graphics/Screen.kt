@@ -103,6 +103,7 @@ class Screen(
      * рисовать всё.
      */
     override fun render(delta: Float) {
+        camera.update()
         updateInfo()
         if (cells != null) {
             cells?.forEach { theCell ->

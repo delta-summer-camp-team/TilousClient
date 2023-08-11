@@ -3,6 +3,8 @@ package com.delta.graphics
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.InputMultiplexer
 import com.delta.*
+import com.delta.graphics.controllers.CameraController
+import com.delta.graphics.controllers.BoardActionsController
 import com.delta.network.GameController
 import ktx.app.KtxGame
 import ktx.app.KtxScreen
@@ -21,20 +23,17 @@ class GraphicsComponent(
         addScreen(screen)
         setScreen<Screen>()
 
-       /* *
-        * TODO
-        * Для того чтобы действия игрока обрабатывались, нужно создать контроллер, который будет
-        * принимать сигналы от приложения (такие как нажатие мыши).
-        * */
-
+        val cameraController = CameraController(screen.camera)
+        val boardActionsController = BoardActionsController(
+            screen.cells,
+            screen.camera::screenToWorld2D,
+            gameController::handlePlaceCellUserRequest,
+            gameController::handleFinishTurnRequest
+        )
 
         val inputMultiplexer = InputMultiplexer()
-
-        /* *
-         * TODO
-         * После того, как вы создали нужный контроллер, вам нужно его добавить в InputMultiplexer
-         * чтобы потом зарегистрировать вместе с inputProcessor. Попробуйте найти подходящий метод для этого.
-         * */
+        inputMultiplexer.addProcessor(boardActionsController)
+        inputMultiplexer.addProcessor(cameraController)
 
         Gdx.input.inputProcessor = inputMultiplexer
     }

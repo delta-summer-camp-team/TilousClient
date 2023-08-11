@@ -56,7 +56,7 @@ class ApplicationHttpClient(
             * url задаёт точку входа на сервер.
             * parameter позволяет установить параметры запроса и их значения.
             */
-            val response: HttpResponse = client.post {
+            val response: HttpResponse = client.get {
                 url("$fullServerAddress/login")
                 parameter("id", appConfig.playersName)
                 parameter("server_pwd", "Delta!!!")
@@ -108,7 +108,7 @@ class ApplicationHttpClient(
 
     fun askToPlaceCell(row: Int, col: Int): Boolean {
         return runBlocking {
-            val response: HttpResponse = client.post("$fullServerAddress/placeCell") {
+            val response: HttpResponse = client.get("$fullServerAddress/placeCell") {
                 parameter(key = "PlayerID", value = player!!.id)
                 parameter(key = "pwd", value = player!!.pwd)
                 parameter(key = "row", value = row.toString())
@@ -121,7 +121,7 @@ class ApplicationHttpClient(
 
     fun askToEndTurn(): Boolean {
         return runBlocking {
-            val response: HttpResponse = client.post {
+            val response: HttpResponse = client.get {
                 url("$fullServerAddress/endPlayersTurn")
                 parameter("id", player?.id)
                 parameter("pwd", player?.pwd)

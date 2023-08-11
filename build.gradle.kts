@@ -14,7 +14,7 @@ repositories {
 dependencies {
     testImplementation(kotlin("test"))
 // game logic
-    implementation("com.github.delta-summer-camp-team:TilousLogic:master-SNAPSHOT")
+    implementation("com.github.delta-summer-camp-team:TilousLogic:-SNAPSHOT")
 
     val ktxVersion = "1.11.0-rc5"
     val ashleyVersion = "1.7.4"
