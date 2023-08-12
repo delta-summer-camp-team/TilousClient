@@ -18,7 +18,6 @@ class BoardActionsController(
         println("$screenX, $screenY")
         // Iterate through the cells and check if the click is within any cell
         val cells = cellsProvider()
-        println(cells)
         cells?.forEach { cell ->
             if (cell.polygon.contains(gameCoordinates.x, gameCoordinates.y)) {
                 // Handle placing a cell at the clicked cell's position

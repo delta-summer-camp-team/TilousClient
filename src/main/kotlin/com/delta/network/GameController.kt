@@ -71,9 +71,9 @@ class GameController(
         }
 
         // 5. If it's the player's turn and they have no resources left
-        this.gameState.playerID?.let { playerID ->
+        gameState.playerID?.let { playerID ->
             val playerResources = game.getPlayerResources()[playerID]
-            if (this.gameState.phase == GamePhase.PLAYER_TURN && playerResources == 0) {
+            if (gameState.phase == GamePhase.PLAYER_TURN && playerResources == 0) {
                 // Automatically request to end the turn
                 val turnEnded = handleFinishTurnRequest()
                 if (turnEnded) {
