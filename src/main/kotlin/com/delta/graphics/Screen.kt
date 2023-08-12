@@ -3,6 +3,7 @@ package com.delta.graphics
 // Внешние библиотеки требующиеся для отрисовки
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.Color
+import com.badlogic.gdx.graphics.GL20
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -71,7 +72,7 @@ class Screen(
         val currentPlayerResources = game?.getPlayerResources()?.getOrDefault(currentPlayerId, -10)
 
         shouldBeMyBackgroundColor = gameState.phase == GamePhase.PLAYER_TURN
-        myColor = ColorSettings.colorMap[gameState.playerID] ?: Color.WHITE
+        myColor = ColorSettings.colorMap[gameState.playerID]?.cpy()?.mul(0.5f) ?: Color.BLACK
 
         text = when (gameState.phase) {
             GamePhase.NOT_STARTED -> "Welcome!"
@@ -101,6 +102,9 @@ class Screen(
      * рисовать всё.
      */
     override fun render(delta: Float) {
+        myColor?.run { Gdx.gl.glClearColor(r, g, b, a)}
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
+
         camera.update()
         updateInfo()
         if (cells != null) {
