@@ -111,7 +111,7 @@ class ApplicationHttpClient(
     fun askToPlaceCell(row: Int, col: Int): Boolean {
         return runBlocking {
             val response: HttpResponse = client.get("$fullServerAddress/placeCell") {
-                parameter(key = "PlayerID", value = player!!.id)
+                parameter(key = "id", value = player!!.id)
                 parameter(key = "pwd", value = player!!.pwd)
                 parameter(key = "row", value = row.toString())
                 parameter(key = "col", value = col.toString())

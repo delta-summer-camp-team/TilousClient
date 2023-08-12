@@ -112,7 +112,7 @@ class Screen(
             }
         }
         drawTextTopLeft(text)
-        drawCartesianGrid(Color.GOLD)
+//        drawCartesianGrid(Color.GOLD)
     }
 
     /**
