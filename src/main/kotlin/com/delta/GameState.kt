@@ -6,15 +6,15 @@ data class GameState(
     var phase: GamePhase = GamePhase.NOT_STARTED
 ) {
     private fun gameStarted(): Boolean {
-        return game != null && phase != GamePhase.NOT_STARTED
+        return game != null
     }
 
     fun isMyTurn(myPlayerID: PlayerID): Boolean {
-        return gameStarted() && playerID == myPlayerID && !game!!.gameIsOver && game!!.currentPlayer == myPlayerID
+        return gameStarted() && !game!!.gameIsOver && game!!.currentPlayer == myPlayerID
     }
 
     fun isOtherTurn(myPlayerID: PlayerID): Boolean {
-        return gameStarted() && playerID != myPlayerID && !game!!.gameIsOver && game!!.currentPlayer != myPlayerID
+        return gameStarted() && !game!!.gameIsOver && game!!.currentPlayer != myPlayerID
     }
 
     fun isNotStarted(): Boolean {
