@@ -67,15 +67,13 @@ class Screen(
     private fun updateInfo() {
         val game = gameState.game
         val currentPlayerId = gameState.playerID
-        val currentPlayerResources = game?.getPlayerResources()?.getOrDefault(currentPlayerId, 0)
+        val currentPlayerResources = game?.getPlayerResources()?.getOrDefault(currentPlayerId, -10)
 
         shouldBeMyBackgroundColor = gameState.phase == GamePhase.PLAYER_TURN
         myColor = ColorSettings.colorMap[gameState.playerID] ?: Color.WHITE
 
         text = when (gameState.phase) {
-            GamePhase.NOT_STARTED -> {
-                "Welcome!"
-            }
+            GamePhase.NOT_STARTED -> "Welcome!"
             GamePhase.PLAYER_TURN -> "Your turn. Resources: $currentPlayerResources"
             GamePhase.OPPONENT_TURN -> "Opponent's turn."
             GamePhase.FINISHED -> "Game over!"

@@ -45,22 +45,23 @@ class GameController(
      * Вызывается внутри [listener], когда ему приходит сигнал от сервера.
      */
     private fun updateGameState(game: Tilous) {
+        // 1. Update the game state
+        this.gameState.game = game
+
         if (gameState.playerID == null) {
             gameState.playerID = httpClient.tryAskPlayerId()
         }
 
-        // 1. Update the game state
-        this.gameState.game = game
         // Possible logic error. If the game state is
         // 2. If the game has not started AND the attempt to find out the ID is successful
-        if (this.gameState.phase == GamePhase.NOT_STARTED && this.gameState.playerID != null) {
-            this.gameState.phase = GamePhase.OPPONENT_TURN
-        }
 
         // 3. If it's time for the player's turn
         this.gameState.playerID?.let { playerID ->
+            println(playerID)
             if (this.gameState.isMyTurn(playerID)) {
-                this.gameState.phase = GamePhase.PLAYER_TURN
+                gameState.phase = GamePhase.PLAYER_TURN
+            } else if (gameState.isOtherTurn(playerID)) {
+                gameState.phase = GamePhase.OPPONENT_TURN
             }
         }
 
