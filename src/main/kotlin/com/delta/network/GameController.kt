@@ -28,13 +28,7 @@ class GameController(
      * @return `true` если получилось,  `false` если нет
      */
     fun handlePlaceCellUserRequest(row: Int, col: Int): Boolean {
-        if (gameState.phase == GamePhase.PLAYER_TURN) {
-            // Check if the cell is placeable
-            return httpClient.askToPlaceCell(row, col)
-        } else {
-            println("It's not your turn.")
-            return false
-        }
+        return httpClient.askToPlaceCell(row, col)
     }
 
     /**
@@ -54,7 +48,6 @@ class GameController(
         if (gameState.playerID == null) {
             gameState.playerID = httpClient.tryAskPlayerId()
         }
-
 
         // 1. Update the game state
         this.gameState.game = game
