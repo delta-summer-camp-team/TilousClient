@@ -88,11 +88,18 @@ class Screen(
         cells?.forEach { cell ->
             val playerID = game?.getCell(cell.row, cell.col)
             cell.color = ColorSettings.colorMap[playerID] ?: Color.BLACK // Set the color based on player or default
+            if (gameState.playerID != null && gameState.game?.isValidCellToPlace(
+                    cell.row,
+                    cell.col,
+                    gameState.playerID!!
+                ) == true
+            ) {
+                cell.color.mul(0.6f)
+            }
+
+            currentBackgroundColor.set(if (shouldBeMyBackgroundColor) myColor else Color.BLACK)
         }
-
-        currentBackgroundColor.set(if (shouldBeMyBackgroundColor) myColor else Color.BLACK)
     }
-
 
     /**
      * Основная функция отрисовки. Вызывается автоматически приложением.
@@ -101,7 +108,7 @@ class Screen(
      * рисовать всё.
      */
     override fun render(delta: Float) {
-        myColor?.run { Gdx.gl.glClearColor(r, g, b, a)}
+        myColor?.run { Gdx.gl.glClearColor(r, g, b, a) }
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT)
 
         camera.update()
@@ -118,7 +125,9 @@ class Screen(
     /**
      * Вызывается, когда окно показывается. Единственное действие, которое нам тут нужно -- правильно установить камеру
      */
-    override fun show() { camera.setToOrtho(viewport) }
+    override fun show() {
+        camera.setToOrtho(viewport)
+    }
 
     override fun resize(width: Int, height: Int) {
         viewport.update(width, height, true)
@@ -140,6 +149,7 @@ class Screen(
 
         return Color.BLACK.cpy()
     }
+
     private fun drawPolygon(polygon: Polygon, color: Color) {
         shapeRenderer.projectionMatrix = camera.projMatrix()
 
