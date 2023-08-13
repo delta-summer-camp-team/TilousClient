@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Polygon
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.math.Vector3
 import com.badlogic.gdx.utils.viewport.FitViewport
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import ktx.app.KtxScreen
@@ -118,6 +117,8 @@ class Screen(
         if (cells != null) {
             cells?.forEach { theCell ->
                 drawPolygon(theCell.polygon, theCell.color)
+                if (gameState.game?.isProductive(theCell.row, theCell.col) == true) drawPolygon(theCell.prodPolygon, theCell.color.cpy().mul(0.5f))
+                if (gameState.game?.isSuperStable(theCell.row, theCell.col) == true) drawPolygon(theCell.stablePolygon, Color.BLACK)
             }
         }
         drawTextTopLeft(text)
