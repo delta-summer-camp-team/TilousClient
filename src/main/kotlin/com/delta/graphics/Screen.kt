@@ -88,7 +88,7 @@ class Screen(
 
         cells?.forEach { cell ->
             val playerID = game?.getCell(cell.row, cell.col)
-            cell.color = ColorSettings.colorMap[playerID] ?: Color.BLACK // Set the color based on player or default
+            cell.color = ColorSettings.colorMap[playerID]?.cpy() ?: Color.BLACK.cpy() // Set the color based on player or default
             if (gameState.playerID != null && gameState.game?.isValidCellToPlace(
                     cell.row,
                     cell.col,
