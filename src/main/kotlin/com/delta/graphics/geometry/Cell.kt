@@ -17,7 +17,7 @@ class Cell(val row: Int, val col: Int) {
     val cellSize: Float = 0.6f
     val polygon = createCellPolygon()
     val prodPolygon = createCellPolygon(0.25f)
-    val stablePolygon = createStablePolygon(0.3f)
+    val stablePolygon = createStablePolygon(0.25f)
 
     /**
      * Возвращает квадрат на плоскости, представляющий эту клетку.
