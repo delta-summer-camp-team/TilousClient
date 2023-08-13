@@ -117,8 +117,8 @@ class Screen(
         if (cells != null) {
             cells?.forEach { theCell ->
                 drawPolygon(theCell.polygon, theCell.color)
-                if (gameState.game?.isProductive(theCell.row, theCell.col) == true) drawPolygon(theCell.prodPolygon, theCell.color.cpy().mul(0.5f))
-                if (gameState.game?.isSuperStable(theCell.row, theCell.col) == true) drawPolygon(theCell.stablePolygon, Color.BLACK)
+                if (gameState.game?.isProductive(theCell.row, theCell.col) == true) drawPolygon(theCell.prodPolygon, theCell.color.cpy().mul(0.7f))
+                if (gameState.game?.isSuperStable(theCell.row, theCell.col) == true) drawPolygon(theCell.stablePolygon, theCell.color.cpy().mul(0.45f))
             }
         }
         drawTextTopLeft(text)
